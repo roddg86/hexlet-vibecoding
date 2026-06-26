@@ -32,6 +32,59 @@ header h1 {
 header p {
     font-size: 1.1em;
     opacity: 0.95;
+    margin-bottom: 20px;
+}
+
+.user-info-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.user-name-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    font-size: 1em;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-name-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.user-name-input:focus {
+    outline: none;
+    border-color: white;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.btn-export-all {
+    background: rgba(80, 200, 120, 0.9);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-export-all:hover {
+    background: #50c878;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(80, 200, 120, 0.4);
+}
+
+.btn-export-all:active {
+    transform: translateY(0);
 }
 
 main {

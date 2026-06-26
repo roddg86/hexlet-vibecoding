@@ -167,6 +167,12 @@ class UIController {
         this.calorieCalculator = new CalorieCalculator();
         this.waterCalculator = new WaterCalculator();
         this.vitaminsCalculator = new VitaminsCalculator();
+        this.results = {
+            bmi: null,
+            calories: null,
+            water: null,
+            vitamins: null
+        };
         this.initializeEventListeners();
     }
 
@@ -202,6 +208,12 @@ class UIController {
 
         // PDF Export Buttons
         this.setupPDFExportButtons();
+
+        // Export All Results Button
+        const exportAllBtn = document.getElementById('export-all-btn');
+        if (exportAllBtn) {
+            exportAllBtn.addEventListener('click', () => this.exportAllResults());
+        }
 
         // Real-time input validation
         document.getElementById('bmi-height').addEventListener('input', (e) => {
@@ -281,6 +293,13 @@ class UIController {
         categoryDiv.className = `result-category bmi-${category}`;
         description.textContent = this.bmiCalculator.getDescription(category);
 
+        // Store result
+        this.results.bmi = {
+            value: bmi,
+            category: this.bmiCalculator.getCategoryText(category),
+            description: description.textContent
+        };
+
         resultDiv.classList.remove('hidden');
     }
 
@@ -307,6 +326,14 @@ class UIController {
         document.getElementById('macros-fats').textContent = `${macros.fats} г`;
         document.getElementById('macros-carbs').textContent = `${macros.carbs} г`;
 
+        // Store result
+        this.results.calories = {
+            value: calories,
+            protein: macros.protein,
+            fats: macros.fats,
+            carbs: macros.carbs
+        };
+
         resultDiv.classList.remove('hidden');
     }
 
@@ -327,6 +354,13 @@ class UIController {
         document.getElementById('water-amount').textContent = liters;
         document.getElementById('water-cups-count').textContent = `Это примерно ${this.waterCalculator.getCupsPerDay(liters)} стаканов (250 мл) в день`;
         document.getElementById('water-schedule').textContent = schedule;
+
+        // Store result
+        this.results.water = {
+            value: liters,
+            cups: this.waterCalculator.getCupsPerDay(liters),
+            schedule: schedule
+        };
 
         resultDiv.classList.remove('hidden');
     }
@@ -358,7 +392,105 @@ class UIController {
 
         document.getElementById('vitamins-note').textContent = recommendation;
 
+        // Store result
+        this.results.vitamins = vitamins;
+
         resultDiv.classList.remove('hidden');
+    }
+
+    exportAllResults() {
+        const hasResults = this.results.bmi || this.results.calories || this.results.water || this.results.vitamins;
+
+        if (!hasResults) {
+            alert('Пожалуйста, выполните хотя бы один расчет перед экспортом.');
+            return;
+        }
+
+        const userName = document.getElementById('user-name').value || 'Пользователь';
+
+        try {
+            // Create a temporary container for all results
+            const tempContainer = document.createElement('div');
+            tempContainer.style.display = 'none';
+            tempContainer.id = 'all-results-container';
+            tempContainer.innerHTML = this.createFullReportHTML(userName);
+            document.body.appendChild(tempContainer);
+
+            // Export the container
+            exportPDF('all-results-container', `Отчет_${userName}_${new Date().toLocaleDateString('ru-RU')}.pdf`);
+
+            // Remove temporary container after a delay
+            setTimeout(() => {
+                document.body.removeChild(tempContainer);
+            }, 1000);
+        } catch (error) {
+            console.error('Error exporting all results:', error);
+            alert('Ошибка при экспорте результатов');
+        }
+    }
+
+    createFullReportHTML(userName) {
+        let html = `<div style="padding: 20px; background: white; font-family: Arial, sans-serif;">`;
+        html += `<h1 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 15px; margin-bottom: 20px;">Отчет калькулятора здоровья</h1>`;
+
+        html += `<div style="margin-bottom: 15px; padding: 15px; background: #f5f5f5; border-radius: 8px;">`;
+        html += `<p style="margin: 5px 0;"><strong>ФИО:</strong> ${userName}</p>`;
+        html += `<p style="margin: 5px 0;"><strong>Дата:</strong> ${new Date().toLocaleDateString('ru-RU')}</p>`;
+        html += `</div>`;
+
+        // BMI Section
+        if (this.results.bmi) {
+            html += `<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">`;
+            html += `<h2 style="color: #667eea; font-size: 18px; margin-bottom: 10px;">Индекс массы тела (BMI)</h2>`;
+            html += `<p><strong>Результат:</strong> ${this.results.bmi.value} кг/м²</p>`;
+            html += `<p><strong>Категория:</strong> ${this.results.bmi.category}</p>`;
+            html += `<p><strong>Рекомендации:</strong> ${this.results.bmi.description}</p>`;
+            html += `</div>`;
+        }
+
+        // Calories Section
+        if (this.results.calories) {
+            html += `<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">`;
+            html += `<h2 style="color: #667eea; font-size: 18px; margin-bottom: 10px;">Дневная норма калорий</h2>`;
+            html += `<p><strong>Калории:</strong> ${this.results.calories.value} ккал/день</p>`;
+            html += `<p><strong>Белки:</strong> ${this.results.calories.protein} г</p>`;
+            html += `<p><strong>Жиры:</strong> ${this.results.calories.fats} г</p>`;
+            html += `<p><strong>Углеводы:</strong> ${this.results.calories.carbs} г</p>`;
+            html += `</div>`;
+        }
+
+        // Water Section
+        if (this.results.water) {
+            html += `<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">`;
+            html += `<h2 style="color: #667eea; font-size: 18px; margin-bottom: 10px;">Дневная норма воды</h2>`;
+            html += `<p><strong>Вода:</strong> ${this.results.water.value} л/день</p>`;
+            html += `<p><strong>Стаканов (250мл):</strong> ${this.results.water.cups} в день</p>`;
+            html += `<p><strong>Расписание:</strong> ${this.results.water.schedule}</p>`;
+            html += `</div>`;
+        }
+
+        // Vitamins Section
+        if (this.results.vitamins) {
+            html += `<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">`;
+            html += `<h2 style="color: #667eea; font-size: 18px; margin-bottom: 10px;">Витамины и минералы</h2>`;
+            html += `<p><strong>Витамин A:</strong> ${this.results.vitamins.vitaminA} мкг</p>`;
+            html += `<p><strong>Витамин D:</strong> ${this.results.vitamins.vitaminD} мкг</p>`;
+            html += `<p><strong>Витамин C:</strong> ${this.results.vitamins.vitaminC} мг</p>`;
+            html += `<p><strong>Витамин B12:</strong> ${this.results.vitamins.vitaminB12} мкг</p>`;
+            html += `<p><strong>Кальций:</strong> ${this.results.vitamins.calcium} мг</p>`;
+            html += `<p><strong>Железо:</strong> ${this.results.vitamins.iron} мг</p>`;
+            html += `<p><strong>Магний:</strong> ${this.results.vitamins.magnesium} мг</p>`;
+            html += `<p><strong>Цинк:</strong> ${this.results.vitamins.zinc} мг</p>`;
+            html += `</div>`;
+        }
+
+        html += `<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; text-align: center; color: #999; font-size: 12px;">`;
+        html += `<p>Этот отчет создан с помощью Калькулятора здоровья</p>`;
+        html += `<p>Результаты предназначены только для справки и не являются медицинским советом</p>`;
+        html += `</div>`;
+
+        html += `</div>`;
+        return html;
     }
 }
 
