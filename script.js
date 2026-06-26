@@ -53,6 +53,90 @@ class WaterCalculator {
     }
 }
 
+// Vitamins and Minerals Calculator
+class VitaminsCalculator {
+    calculateVitaminsAndMinerals(weight, gender, age) {
+        return {
+            vitaminA: this.calculateVitaminA(gender, age),
+            vitaminD: this.calculateVitaminD(age),
+            vitaminC: this.calculateVitaminC(gender),
+            vitaminB12: this.calculateVitaminB12(gender),
+            calcium: this.calculateCalcium(age, gender),
+            iron: this.calculateIron(gender, age),
+            magnesium: this.calculateMagnesium(gender, age),
+            zinc: this.calculateZinc(gender)
+        };
+    }
+
+    calculateVitaminA(gender, age) {
+        if (gender === 'male') {
+            return age < 14 ? 600 : 900;
+        } else {
+            return age < 14 ? 600 : 700;
+        }
+    }
+
+    calculateVitaminD(age) {
+        if (age < 1) return 10;
+        if (age < 71) return 15;
+        return 20;
+    }
+
+    calculateVitaminC(gender) {
+        return gender === 'male' ? 90 : 75;
+    }
+
+    calculateVitaminB12(gender) {
+        return 2.4;
+    }
+
+    calculateCalcium(age, gender) {
+        if (age < 9) return 700;
+        if (age < 19) return 1300;
+        if (gender === 'female' && age < 51) return 1000;
+        if (gender === 'female') return 1200;
+        if (age < 71) return 1000;
+        return 1200;
+    }
+
+    calculateIron(gender, age) {
+        if (gender === 'male') {
+            return age < 19 ? 11 : 8;
+        } else {
+            return age < 19 ? 15 : (age < 51 ? 18 : 8);
+        }
+    }
+
+    calculateMagnesium(gender, age) {
+        if (gender === 'male') {
+            return age < 14 ? (age < 9 ? 80 : 130) : (age < 31 ? 240 : 420);
+        } else {
+            return age < 14 ? (age < 9 ? 80 : 130) : (age < 31 ? 310 : 320);
+        }
+    }
+
+    calculateZinc(gender) {
+        return gender === 'male' ? 11 : 8;
+    }
+
+    getRecommendation(gender, age) {
+        let recommendation = 'Рекомендуется получать витамины и минералы из разнообразных продуктов: ';
+
+        if (age < 19) {
+            recommendation += 'молочных продуктов для кальция и витамина D, мяса для железа и цинка, ';
+        } else if (gender === 'female' && age < 51) {
+            recommendation += 'обогащенных зерновых для железа, молочных продуктов для кальция, ';
+        } else {
+            recommendation += 'молочных продуктов для кальция и витамина D, ';
+        }
+
+        recommendation += 'цитрусовых для витамина C, орехов и семян для магния. ';
+        recommendation += 'При необходимости проконсультируйтесь с врачом о приеме добавок.';
+
+        return recommendation;
+    }
+}
+
 // Daily Calorie Calculator (Harris-Benedict formula)
 class CalorieCalculator {
     calculateBMR(age, gender, heightCm, weightKg) {
@@ -82,6 +166,7 @@ class UIController {
         this.bmiCalculator = new BMICalculator();
         this.calorieCalculator = new CalorieCalculator();
         this.waterCalculator = new WaterCalculator();
+        this.vitaminsCalculator = new VitaminsCalculator();
         this.initializeEventListeners();
     }
 
@@ -107,6 +192,12 @@ class UIController {
         document.getElementById('water-form').addEventListener('submit', (e) => {
             e.preventDefault();
             this.calculateWater();
+        });
+
+        // Vitamins Form
+        document.getElementById('vitamins-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.calculateVitamins();
         });
 
         // Real-time input validation
@@ -210,6 +301,36 @@ class UIController {
         document.getElementById('water-amount').textContent = liters;
         document.getElementById('water-cups-count').textContent = `Это примерно ${this.waterCalculator.getCupsPerDay(liters)} стаканов (250 мл) в день`;
         document.getElementById('water-schedule').textContent = schedule;
+
+        resultDiv.classList.remove('hidden');
+    }
+
+    calculateVitamins() {
+        const weight = parseFloat(document.getElementById('vitamins-weight').value);
+        const gender = document.getElementById('vitamins-gender').value;
+        const age = parseInt(document.getElementById('vitamins-age').value);
+
+        if (!weight || !gender || !age) return;
+
+        const vitamins = this.vitaminsCalculator.calculateVitaminsAndMinerals(weight, gender, age);
+        const recommendation = this.vitaminsCalculator.getRecommendation(gender, age);
+
+        this.displayVitaminsResult(vitamins, recommendation);
+    }
+
+    displayVitaminsResult(vitamins, recommendation) {
+        const resultDiv = document.getElementById('vitamins-result');
+
+        document.getElementById('vitamin-a').textContent = `${vitamins.vitaminA} мкг`;
+        document.getElementById('vitamin-d').textContent = `${vitamins.vitaminD} мкг`;
+        document.getElementById('vitamin-c').textContent = `${vitamins.vitaminC} мг`;
+        document.getElementById('vitamin-b12').textContent = `${vitamins.vitaminB12} мкг`;
+        document.getElementById('mineral-calcium').textContent = `${vitamins.calcium} мг`;
+        document.getElementById('mineral-iron').textContent = `${vitamins.iron} мг`;
+        document.getElementById('mineral-magnesium').textContent = `${vitamins.magnesium} мг`;
+        document.getElementById('mineral-zinc').textContent = `${vitamins.zinc} мг`;
+
+        document.getElementById('vitamins-note').textContent = recommendation;
 
         resultDiv.classList.remove('hidden');
     }
