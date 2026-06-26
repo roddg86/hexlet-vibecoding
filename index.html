@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор калорий и индекса массы тела</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Калькулятор здоровья</h1>
+            <p>Рассчитайте индекс массы тела и дневную норму калорий</p>
+        </header>
+
+        <main>
+            <!-- Вкладки -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="bmi">Индекс массы тела</button>
+                <button class="tab-button" data-tab="calories">Дневная норма калорий</button>
+            </div>
+
+            <!-- Калькулятор BMI -->
+            <section id="bmi" class="tab-content active">
+                <div class="calculator-card">
+                    <h2>Расчет индекса массы тела (BMI)</h2>
+                    <form id="bmi-form">
+                        <div class="form-group">
+                            <label for="bmi-height">Рост (см)</label>
+                            <input type="number" id="bmi-height" placeholder="170" min="100" max="250" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bmi-weight">Вес (кг)</label>
+                            <input type="number" id="bmi-weight" placeholder="70" min="30" max="300" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Рассчитать BMI</button>
+                    </form>
+
+                    <div id="bmi-result" class="result hidden">
+                        <div class="result-value">
+                            <span id="bmi-number" class="big-number">0</span>
+                            <span class="unit">кг/м²</span>
+                        </div>
+                        <div id="bmi-category" class="result-category"></div>
+                        <p id="bmi-description" class="result-description"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Калькулятор калорий -->
+            <section id="calories" class="tab-content">
+                <div class="calculator-card">
+                    <h2>Расчет дневной нормы калорий</h2>
+                    <form id="calories-form">
+                        <div class="form-group">
+                            <label for="calories-age">Возраст (лет)</label>
+                            <input type="number" id="calories-age" placeholder="25" min="10" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="calories-gender">Пол</label>
+                            <select id="calories-gender" required>
+                                <option value="">Выберите пол</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="calories-height">Рост (см)</label>
+                            <input type="number" id="calories-height" placeholder="170" min="100" max="250" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="calories-weight">Вес (кг)</label>
+                            <input type="number" id="calories-weight" placeholder="70" min="30" max="300" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="calories-activity">Уровень активности</label>
+                            <select id="calories-activity" required>
+                                <option value="">Выберите уровень активности</option>
+                                <option value="1.2">Сидячий образ жизни (1.2)</option>
+                                <option value="1.375">Легкая активность (1.375)</option>
+                                <option value="1.55">Умеренная активность (1.55)</option>
+                                <option value="1.725">Высокая активность (1.725)</option>
+                                <option value="1.9">Очень высокая активность (1.9)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Рассчитать калории</button>
+                    </form>
+
+                    <div id="calories-result" class="result hidden">
+                        <div class="result-value">
+                            <span id="calories-number" class="big-number">0</span>
+                            <span class="unit">ккал/день</span>
+                        </div>
+                        <div class="calories-recommendations">
+                            <h3>Рекомендуемое распределение</h3>
+                            <div class="macro-split">
+                                <div class="macro">
+                                    <span class="macro-name">Белки</span>
+                                    <span id="macros-protein" class="macro-value">0 г</span>
+                                </div>
+                                <div class="macro">
+                                    <span class="macro-name">Жиры</span>
+                                    <span id="macros-fats" class="macro-value">0 г</span>
+                                </div>
+                                <div class="macro">
+                                    <span class="macro-name">Углеводы</span>
+                                    <span id="macros-carbs" class="macro-value">0 г</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Калькулятор здоровья. Для справки и образовательных целей.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
