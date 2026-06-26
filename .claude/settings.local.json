@@ -6,7 +6,11 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git branch *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(brew install *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "Bash(git commit -m 'Add vitamins and minerals calculator feature *)"
     ]
   }
 }

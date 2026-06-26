@@ -19,6 +19,7 @@
                 <button class="tab-button active" data-tab="bmi">Индекс массы тела</button>
                 <button class="tab-button" data-tab="calories">Дневная норма калорий</button>
                 <button class="tab-button" data-tab="water">Норма воды</button>
+                <button class="tab-button" data-tab="vitamins">Витамины и минералы</button>
             </div>
 
             <!-- Калькулятор BMI -->
@@ -142,6 +143,81 @@
                         <div class="water-details">
                             <p id="water-cups-count" class="detail-info"></p>
                             <p id="water-schedule" class="detail-info"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Калькулятор витаминов и минералов -->
+            <section id="vitamins" class="tab-content">
+                <div class="calculator-card">
+                    <h2>Рекомендуемая норма витаминов и минералов</h2>
+                    <form id="vitamins-form">
+                        <div class="form-group">
+                            <label for="vitamins-weight">Вес (кг)</label>
+                            <input type="number" id="vitamins-weight" placeholder="70" min="30" max="300" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vitamins-gender">Пол</label>
+                            <select id="vitamins-gender" required>
+                                <option value="">Выберите пол</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vitamins-age">Возраст (лет)</label>
+                            <input type="number" id="vitamins-age" placeholder="25" min="1" max="120" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Рассчитать нормы</button>
+                    </form>
+
+                    <div id="vitamins-result" class="result hidden">
+                        <div class="vitamins-grid">
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Витамин A</span>
+                                <span id="vitamin-a" class="vitamin-value">0 мкг</span>
+                                <span class="vitamin-note">Зрение, иммунитет</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Витамин D</span>
+                                <span id="vitamin-d" class="vitamin-value">0 мкг</span>
+                                <span class="vitamin-note">Кости, кальций</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Витамин C</span>
+                                <span id="vitamin-c" class="vitamin-value">0 мг</span>
+                                <span class="vitamin-note">Иммунитет, кожа</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Витамин B12</span>
+                                <span id="vitamin-b12" class="vitamin-value">0 мкг</span>
+                                <span class="vitamin-note">Энергия, нервы</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Кальций</span>
+                                <span id="mineral-calcium" class="vitamin-value">0 мг</span>
+                                <span class="vitamin-note">Кости, зубы</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Железо</span>
+                                <span id="mineral-iron" class="vitamin-value">0 мг</span>
+                                <span class="vitamin-note">Кровь, энергия</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Магний</span>
+                                <span id="mineral-magnesium" class="vitamin-value">0 мг</span>
+                                <span class="vitamin-note">Мышцы, релаксация</span>
+                            </div>
+                            <div class="vitamin-card">
+                                <span class="vitamin-name">Цинк</span>
+                                <span id="mineral-zinc" class="vitamin-value">0 мг</span>
+                                <span class="vitamin-note">Иммунитет, заживление</span>
+                            </div>
+                        </div>
+                        <div class="vitamins-recommendations">
+                            <h3>Рекомендации</h3>
+                            <p id="vitamins-note" class="vitamins-note"></p>
                         </div>
                     </div>
                 </div>
