@@ -33,6 +33,26 @@ class BMICalculator {
     }
 }
 
+// Water Calculator
+class WaterCalculator {
+    calculateDailyWater(weightKg, activityLevel) {
+        const baseWater = weightKg * 0.035;
+        return (baseWater * parseFloat(activityLevel)).toFixed(2);
+    }
+
+    getCupsPerDay(liters) {
+        return Math.round(liters / 0.25);
+    }
+
+    getSchedule(liters) {
+        const cupsPerDay = this.getCupsPerDay(liters);
+        const hoursAwake = 16;
+        const interval = Math.round(hoursAwake / 8);
+        const cupsPerInterval = Math.ceil(cupsPerDay / 8);
+        return `Рекомендуется пить ${cupsPerInterval} стакана воды каждые ${interval} часа в течение дня`;
+    }
+}
+
 // Daily Calorie Calculator (Harris-Benedict formula)
 class CalorieCalculator {
     calculateBMR(age, gender, heightCm, weightKg) {
@@ -61,6 +81,7 @@ class UIController {
     constructor() {
         this.bmiCalculator = new BMICalculator();
         this.calorieCalculator = new CalorieCalculator();
+        this.waterCalculator = new WaterCalculator();
         this.initializeEventListeners();
     }
 
@@ -80,6 +101,12 @@ class UIController {
         document.getElementById('calories-form').addEventListener('submit', (e) => {
             e.preventDefault();
             this.calculateCalories();
+        });
+
+        // Water Form
+        document.getElementById('water-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.calculateWater();
         });
 
         // Real-time input validation
@@ -162,6 +189,27 @@ class UIController {
         document.getElementById('macros-protein').textContent = `${macros.protein} г`;
         document.getElementById('macros-fats').textContent = `${macros.fats} г`;
         document.getElementById('macros-carbs').textContent = `${macros.carbs} г`;
+
+        resultDiv.classList.remove('hidden');
+    }
+
+    calculateWater() {
+        const weight = parseFloat(document.getElementById('water-weight').value);
+        const activity = document.getElementById('water-activity').value;
+
+        if (!weight || !activity) return;
+
+        const dailyWater = this.waterCalculator.calculateDailyWater(weight, activity);
+        const schedule = this.waterCalculator.getSchedule(dailyWater);
+
+        this.displayWaterResult(dailyWater, schedule);
+    }
+
+    displayWaterResult(liters, schedule) {
+        const resultDiv = document.getElementById('water-result');
+        document.getElementById('water-amount').textContent = liters;
+        document.getElementById('water-cups-count').textContent = `Это примерно ${this.waterCalculator.getCupsPerDay(liters)} стаканов (250 мл) в день`;
+        document.getElementById('water-schedule').textContent = schedule;
 
         resultDiv.classList.remove('hidden');
     }
