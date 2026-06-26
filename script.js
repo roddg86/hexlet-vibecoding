@@ -362,43 +362,88 @@ class UIController {
     }
 }
 
-// PDF Export Function
+// PDF Export Function - Primary method using browser print dialog
 function exportPDF(elementId, filename) {
     const element = document.getElementById(elementId);
 
     if (!element) {
         console.error('Element not found:', elementId);
-        return;
-    }
-
-    // Check if html2pdf is available
-    if (typeof html2pdf === 'undefined') {
-        console.error('html2pdf library is not loaded');
-        alert('Ошибка: библиотека для экспорта PDF не загружена. Пожалуйста, обновите страницу.');
+        alert('Ошибка: элемент не найден');
         return;
     }
 
     try {
-        const opt = {
-            margin: [10, 10, 10, 10],
-            filename: filename,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true }
-        };
+        // Hide all other content for clean print
+        hideOtherElements(elementId);
 
-        // Use the correct API for html2pdf.js
-        const worker = html2pdf().set(opt).from(element);
-        worker.save().then(() => {
-            console.log('PDF exported successfully');
-        }).catch((error) => {
-            console.error('Error exporting PDF:', error);
-            alert('Ошибка при экспорте PDF. Пожалуйста, попробуйте ещё раз.');
-        });
+        // Show confirmation and start print
+        setTimeout(() => {
+            showExportInstructions(filename);
+            window.print();
+
+            // Show other content again after print dialog closes
+            setTimeout(() => {
+                showAllElements();
+            }, 500);
+        }, 100);
     } catch (error) {
-        console.error('Exception in exportPDF:', error);
-        alert('Неожиданная ошибка при экспорте PDF');
+        console.error('Error in exportPDF:', error);
+        showAllElements();
+        alert('Ошибка при экспорте. Пожалуйста, попробуйте ещё раз.');
     }
+}
+
+// Hide all elements except the target one for clean PDF
+function hideOtherElements(elementId) {
+    // Hide header
+    const header = document.querySelector('header');
+    if (header) header.style.display = 'none';
+
+    // Hide tabs
+    const tabs = document.querySelector('.tabs');
+    if (tabs) tabs.style.display = 'none';
+
+    // Hide all tab contents except the current one
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        if (tab.id !== elementId.replace('-result', '')) {
+            tab.style.display = 'none';
+        }
+    });
+
+    // Hide footer
+    const footer = document.querySelector('footer');
+    if (footer) footer.style.display = 'none';
+
+    // Hide buttons
+    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+        btn.style.display = 'none';
+    });
+}
+
+// Show all elements again
+function showAllElements() {
+    document.querySelector('header').style.display = '';
+    document.querySelector('.tabs').style.display = '';
+    document.querySelector('footer').style.display = '';
+
+    // Show active tab
+    const activeTab = document.querySelector('.tab-content.active');
+    if (activeTab) activeTab.style.display = '';
+
+    // Show buttons
+    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+        btn.style.display = '';
+    });
+}
+
+// Show instructions to user
+function showExportInstructions(filename) {
+    const message = 'Откроется окно печати браузера.\n\n' +
+                   'Для сохранения в PDF:\n' +
+                   '1. Выберите принтер: "Сохранить как PDF"\n' +
+                   '2. Нажмите "Сохранить"\n' +
+                   '3. Назовите файл: ' + filename.replace('.pdf', '');
+    console.log(message);
 }
 
 // Initialize when DOM is ready
