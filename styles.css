@@ -144,6 +144,23 @@ select:focus {
     transform: translateY(0);
 }
 
+.btn-secondary {
+    background: #50c878;
+    color: white;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background: #45b870;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(80, 200, 120, 0.4);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
 /* Результаты */
 .result {
     margin-top: 30px;
