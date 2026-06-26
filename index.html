@@ -18,6 +18,7 @@
             <div class="tabs">
                 <button class="tab-button active" data-tab="bmi">Индекс массы тела</button>
                 <button class="tab-button" data-tab="calories">Дневная норма калорий</button>
+                <button class="tab-button" data-tab="water">Норма воды</button>
             </div>
 
             <!-- Калькулятор BMI -->
@@ -111,10 +112,44 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Калькулятор воды -->
+            <section id="water" class="tab-content">
+                <div class="calculator-card">
+                    <h2>Расчет дневной нормы воды</h2>
+                    <form id="water-form">
+                        <div class="form-group">
+                            <label for="water-weight">Вес (кг)</label>
+                            <input type="number" id="water-weight" placeholder="70" min="30" max="300" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="water-activity">Уровень активности</label>
+                            <select id="water-activity" required>
+                                <option value="">Выберите уровень активности</option>
+                                <option value="1.0">Низкая активность (1.0)</option>
+                                <option value="1.2">Умеренная активность (1.2)</option>
+                                <option value="1.5">Высокая активность (1.5)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Рассчитать норму воды</button>
+                    </form>
+
+                    <div id="water-result" class="result hidden">
+                        <div class="result-value">
+                            <span id="water-amount" class="big-number">0</span>
+                            <span class="unit">литров/день</span>
+                        </div>
+                        <div class="water-details">
+                            <p id="water-cups-count" class="detail-info"></p>
+                            <p id="water-schedule" class="detail-info"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <footer>
-            <p>&copy; 2024 Калькулятор здоровья. Для справки и образовательных целей.</p>
+            <p>&copy; 2026 Калькулятор здоровья. Для справки и образовательных целей.</p>
         </footer>
     </div>
 

@@ -249,6 +249,22 @@ select:focus {
     font-weight: bold;
 }
 
+/* Вода */
+.water-details {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.detail-info {
+    background: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 10px;
+    border-left: 4px solid #3f51b5;
+}
+
 footer {
     text-align: center;
     padding: 20px;
