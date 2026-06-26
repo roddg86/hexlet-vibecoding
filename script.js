@@ -200,6 +200,9 @@ class UIController {
             this.calculateVitamins();
         });
 
+        // PDF Export Buttons
+        this.setupPDFExportButtons();
+
         // Real-time input validation
         document.getElementById('bmi-height').addEventListener('input', (e) => {
             if (e.target.value && document.getElementById('bmi-weight').value) {
@@ -212,6 +215,29 @@ class UIController {
                 this.calculateBMI();
             }
         });
+    }
+
+    setupPDFExportButtons() {
+        // Find all export buttons and attach event listeners
+        const exportButtons = document.querySelectorAll('.btn-secondary');
+        exportButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const resultId = button.parentElement.id;
+                const filename = this.getFilenameForElement(resultId);
+                exportPDF(resultId, filename);
+            });
+        });
+    }
+
+    getFilenameForElement(elementId) {
+        const filenames = {
+            'bmi-result': 'BMI_результаты.pdf',
+            'calories-result': 'Калории_результаты.pdf',
+            'water-result': 'Вода_результаты.pdf',
+            'vitamins-result': 'Витамины_результаты.pdf'
+        };
+        return filenames[elementId] || 'результаты.pdf';
     }
 
     switchTab(tabName) {
@@ -339,14 +365,40 @@ class UIController {
 // PDF Export Function
 function exportPDF(elementId, filename) {
     const element = document.getElementById(elementId);
-    const opt = {
-        margin: 10,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-    };
-    html2pdf().set(opt).from(element).save();
+
+    if (!element) {
+        console.error('Element not found:', elementId);
+        return;
+    }
+
+    // Check if html2pdf is available
+    if (typeof html2pdf === 'undefined') {
+        console.error('html2pdf library is not loaded');
+        alert('Ошибка: библиотека для экспорта PDF не загружена. Пожалуйста, обновите страницу.');
+        return;
+    }
+
+    try {
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true }
+        };
+
+        // Use the correct API for html2pdf.js
+        const worker = html2pdf().set(opt).from(element);
+        worker.save().then(() => {
+            console.log('PDF exported successfully');
+        }).catch((error) => {
+            console.error('Error exporting PDF:', error);
+            alert('Ошибка при экспорте PDF. Пожалуйста, попробуйте ещё раз.');
+        });
+    } catch (error) {
+        console.error('Exception in exportPDF:', error);
+        alert('Неожиданная ошибка при экспорте PDF');
+    }
 }
 
 // Initialize when DOM is ready

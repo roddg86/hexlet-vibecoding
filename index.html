@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор калорий и индекса массы тела</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- html2pdf.js for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-ZRhq6n7YQc1V8aJkkSatJGa3n5FGhQJgbWlFjekfTdvmMPIAqP7sKC1YM7xH52/k5E6DKZL8cxGzKB7nWbSX2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="container">
@@ -46,7 +47,7 @@
                         </div>
                         <div id="bmi-category" class="result-category"></div>
                         <p id="bmi-description" class="result-description"></p>
-                        <button class="btn btn-secondary" onclick="exportPDF('bmi-result', 'BMI_результаты.pdf')">📥 Скачать PDF</button>
+                        <button class="btn btn-secondary">📥 Скачать PDF</button>
                     </div>
                 </div>
             </section>
